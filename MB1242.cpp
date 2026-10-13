@@ -139,7 +139,7 @@ bool MB1242::changeAddress(uint8_t addr)
   //  TODO error?
   return true;
 }
- 
+
 int MB1242::getLastError()
 {
   int e = _error;

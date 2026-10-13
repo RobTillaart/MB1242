@@ -31,10 +31,21 @@ TODO elaborate
 
 Voltage 3.0 - 5.5 V, so should work for ESP32 and AVR.
 
-Sample rate up to 40 Hz.
+Temperature -40° - 65°
+
+Sample rate up to 40 Hz (need status pin).
+
+Device is operational after ~115 ms
 
 
 Feedback as always is welcome.
+
+
+### Correction for speed of sound.
+
+The library or sensor does not compensate the speed of sound for temperature.
+Look at the SRF05 library for a function to calculate the speed of sound.
+To be added in the future.
 
 
 ### Datasheet warning
@@ -65,21 +76,22 @@ and any other applications that may cause personal injury due to the product's f
 |   5   |  SCL - I2C clock
 |   4   |  SDA - I2C data
 |   3   |  not used
-|   2   |  NIY - address announce / status
-|   1   |  NIY - address used
+|   2   |  status + not implemented - address announce
+|   1   |  not implemented - address used
 
-Pin 1 and 2 are not implemented yet in the library.
 
 Pin 2 is HIGH during distance measurement, and LOW when IDLE.
 During power up pin 2 "sends" a high pulse indicating its 8 bit address.
 100 us per unit, so address 224 gives a pulse of 22.400 micros.
 One can measure this with digitalRead() or pulseIn() only if you can 
-control the startup.
+control the startup. The library does not support this function.
 
-Implementing the status pin can speed up the reading of the device.
+Using the status pin can speed up the detection that the device is ready,
+and thus the reading of the device.
 
 If pin 1 is HIGH or unconnected it will use the internal I2C address set
 with changeAddress(). If pulled LOW it will use factory default address.
+The library does not support this function.
 
 
 ### Compatibles
@@ -120,11 +132,12 @@ TODO: Test on Arduino UNO and ESP32
 
 The default address is 0x70 (112).
 The address can be changed with **changeAddress(uint8_t addr)**.
-
 Invalid addresses reported in the datasheet are 0, 80, 164, 170.
 ChangeAddress() will return false if these are used.
 
 It is not clear if a restart is needed when the address is changed.
+
+To be tested.
 
 
 ### I2C multiplexing
@@ -147,7 +160,7 @@ too if they are behind the multiplexer.
 
 ### I2C Performance
 
-Datasheet states it only works at 100 kHz or lower.
+Datasheet states it only works at 20 - 100 kHz.
 
 To be tested.
 
@@ -161,20 +174,21 @@ To be tested.
 ### Constructor
 
 - **MB1242(uint8_t address, TwoWire \*wire = &Wire)** optional select I2C bus.
-- **bool begin()** checks if device is visible on the I2C bus.
+- **bool begin()** resets internal variables and checks if device address is 
+visible on the I2C bus.
 - **bool isConnected()** Checks if device address can be found on I2C bus.
-- **uint8_t getAddress()** Returns the fixed address 0x2A (42).
+- **uint8_t getAddress()** Returns the device address, default 0x70 (112).
 
 
 ### Async Request
 
-- **bool requestDistance()** request a new sample. 
+- **bool requestDistance()** request a new distance measurement. 
 This might take up to 100 ms.
 - **void setStatusPin(uint8_t statusPin)** option to connect pin 2
-to the library so ready can detect ready faster.
-It might be possible to use an IRQ pin as status pin.
-Check datasheet.
-- **bool ready()** returns true, 100 ms after a request was made.
+to the library so ready() can detect measurement ready much faster.
+It is possible to use an IRQ pin as status pin and set a flag
+in the IRQ. 
+- **bool ready()** returns true, up to 100 ms after a request was made.
 Will return false if no request was made.
 If the statusPin is set, it will read the status pin instead of 
 waiting hard for 100 millis.
@@ -182,7 +196,8 @@ waiting hard for 100 millis.
 
 ### Async Read
 
-- **uint16_t readCM()** read device, returns range in centimeter.
+- **uint16_t readCM()** read the measurement from the device.
+Returns range in centimeter.
 - **float readMeter()** wrapper around readCM(), converts to meters.
 - **float readInch()** wrapper around readCM(), converts to inches.
 - **float readFeet()** wrapper around readCM(), converts to feet.
@@ -195,7 +210,7 @@ One can use the printHelpers library to print inch and feet nicely.
 ### Address
 
 - **bool changeAddress(uint8_t addr)** changes the address of the device.
-invalid addresses 0, 80, 164, 170
+Invalid addresses 0, 80, 164, 170 are checked and return false.
 
 
 ### Debug
@@ -209,15 +224,17 @@ invalid addresses 0, 80, 164, 170
 
 - improve documentation
 - get hardware to test
-- improve error handling
 
 #### Should
 
 - implement derived classes (wrappers?)
+- SOS calibration for temperature and humidity.
+- improve error handling
 
 #### Could
 
 - add examples
+  - IRQ for status pin.
 - add unit tests (if possible)
 
 #### Wont

@@ -35,10 +35,12 @@ public:
   uint8_t  getAddress();
 
 
-  //       ASYNC READ
+  //       ASYNC REQUEST
   bool     requestDistance();
   void     setStatusPin(uint8_t statusPin);
   bool     ready();
+
+  //       ASYNC READ
   uint16_t readCM();
   float    readMeter();
   float    readInch();
