@@ -19,6 +19,7 @@ void setup()
   Serial.print("MB1242_LIB_VERSION: ");
   Serial.println(MB1242_LIB_VERSION);
   Serial.println();
+  delay(100);
 
   Wire.begin();
   MB.begin();

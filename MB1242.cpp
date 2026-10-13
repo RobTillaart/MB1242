@@ -50,7 +50,7 @@ uint8_t MB1242::getAddress()
 
 ///////////////////////////////////////
 //
-//  READ
+//  REQUEST
 //
 bool MB1242::requestDistance()
 {
@@ -78,6 +78,11 @@ bool MB1242::ready()
   return _requestInProgress && ((millis() - _lastRequest) >= 100);
 }
 
+
+///////////////////////////////////////
+//
+//  READ
+//
 uint16_t MB1242::readCM()
 {
   _lastRead = millis();
@@ -111,6 +116,11 @@ uint32_t MB1242::lastRead()
   return _lastRead;
 }
 
+
+///////////////////////////////////////
+//
+//  OTHER
+//
 bool MB1242::changeAddress(uint8_t addr)
 {
   if ((addr == 0)   || (addr == 80) || (addr == 164) || (addr == 170))

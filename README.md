@@ -113,7 +113,9 @@ TODO: Test on Arduino UNO and ESP32
 
 ### I2C Address
 
-default 0x70 (112), can be changed with **chageAddress()**.
+default 0x70 (112), can be changed with **changeAddress(uint8_t addr)**.
+
+Invalid addresses reported in the datasheet are 0, 80, 164, 170.
 
 
 ### I2C multiplexing
@@ -199,6 +201,8 @@ invalid addresses 0, 80, 164, 170
 - improve error handling
 
 #### Should
+
+- implement derived classes (wrappers?)
 
 #### Could
 
