@@ -45,9 +45,6 @@ and any other applications that may cause personal injury due to the product's f
 
 ### Hardware
 
-
-TODO
-
 ```
              TOPVIEW MB1242
          +--------------------+
@@ -87,7 +84,15 @@ with changeAddress(). If pulled LOW it will use factory default address.
 
 ### Compatibles
 
-Datasheet mentions: MB1202, MB1212, MB1222, MB1232, MB1242
+Datasheet (ds) mentions:
+
+|  device  |  min range   |  ds  |   beam   |notes  |
+|:---------|:------------:|:----:|:--------:|:------|
+|  MB1202  |  20 cm / 6"  |  09  |  wide    |  people, high sensitivity
+|  MB1212  |  20 cm / 6"  |  10  |  medium  |  best balance
+|  MB1222  |  25 cm / 6"  |  11  |  medium  |  best balance
+|  MB1232  |  25 cm / 6"  |  12  |  narrow  |  large targets
+|  MB1242  |  25 cm / 6"  |  13  |  narrow  |  very large targets
 
 
 ### Related
@@ -113,9 +118,13 @@ TODO: Test on Arduino UNO and ESP32
 
 ### I2C Address
 
-default 0x70 (112), can be changed with **changeAddress(uint8_t addr)**.
+The default address is 0x70 (112).
+The address can be changed with **changeAddress(uint8_t addr)**.
 
 Invalid addresses reported in the datasheet are 0, 80, 164, 170.
+ChangeAddress() will return false if these are used.
+
+It is not clear if a restart is needed when the address is changed.
 
 
 ### I2C multiplexing
@@ -138,7 +147,9 @@ too if they are behind the multiplexer.
 
 ### I2C Performance
 
-Datasheet states it only works at 100 kHz.
+Datasheet states it only works at 100 kHz or lower.
+
+To be tested.
 
 
 ## Interface
