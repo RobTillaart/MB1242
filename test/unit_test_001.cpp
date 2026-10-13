@@ -46,7 +46,7 @@ unittest(test_constants)
 
 unittest(test_constructor)
 {
-  MB1242 MB;
+  MB1242 MB(0x70);
 }
 
 
