@@ -11,14 +11,14 @@
 
 # MB1242
 
-Arduino library for the MaxBotic I2C MB1242 distance sensor.
+Arduino library for the MaxBotix I2C MB1242 distance sensor.
 
 
 ## Description
 
 **Experimental - work in progress**
 
-This library is to use the MaxBotic I2C MB1242 and compatible distance 
+This library is to use the MaxBotix I2C MB1242 and compatible distance 
 sensors MB1202, MB1212, MB1222 and MB1232.
 
 Note: the library is not tested with hardware yet.
@@ -128,7 +128,8 @@ Distance sensors
 - https://github.com/RobTillaart/US500 - US500 + US4000 underwater distance sensor.
 
 Other
-- https://github.com/RobTillaart/lengthConverter
+- https://maxbotix.com/ - company that makes the MB1242
+- https://github.com/RobTillaart/lengthConverter - idem
 - https://github.com/RobTillaart/printHelpers - print inches and feet
 - https://github.com/stoduk/PingSerial  Serial IO with distance sensors e.g. US-100
 

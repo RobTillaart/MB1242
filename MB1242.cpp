@@ -1,9 +1,9 @@
 //
 //    FILE: MB1242.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.1.0
+// VERSION: 0.1.1
 //    DATE: 2026-10-13
-// PURPOSE: Arduino library for the MaxBotic I2C MB1242 distance sensor.
+// PURPOSE: Arduino library for the MaxBotix I2C MB1242 distance sensor.
 //     URL: https://github.com/RobTillaart/MB1242
 
 
