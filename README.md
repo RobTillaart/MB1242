@@ -209,7 +209,7 @@ One can use the printHelpers library to print inch and feet nicely.
 
 ### Address
 
-- **bool changeAddress(uint8_t addr)** changes the address of the device.
+- **bool changeAddress(uint8_t address)** changes the address of the device.
 Invalid addresses 0, 80, 164, 170 are checked and return false.
 
 

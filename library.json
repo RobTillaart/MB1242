@@ -1,6 +1,6 @@
 {
   "name": "MB1242",
-  "keywords": "",
+  "keywords": "MB1202,MB1212,MB1222,MB1232",
   "description": "Arduino library for the MaxBotic I2C MB1242 distance sensor.",
   "authors":
   [

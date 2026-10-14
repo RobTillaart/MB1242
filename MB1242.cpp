@@ -181,5 +181,11 @@ int MB1242::_read(uint16_t &raw)
 }
 
 
+//////////////////////////////////////
+//
+//  DERIVED (wrappers in .h for now)
+//
+
+
 //  -- END OF FILE --
 

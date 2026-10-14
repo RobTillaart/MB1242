@@ -71,9 +71,43 @@ protected:
 
 //////////////////////////////////////
 //
-//  DERIVED (TODO)
+//  DERIVED (wrappers for now)
 //
-//  MB1202, MB1212, MB1222, MB1232, MB12426
+class MB1202 : public MB1242
+{
+public:
+  MB1202(uint8_t address, TwoWire *wire = &Wire)
+    : MB1242(address, wire)
+  {
+  }
+};
+
+class MB1212 : public MB1242
+{
+public:
+  MB1212(uint8_t address, TwoWire *wire = &Wire)
+    : MB1242(address, wire)
+  {
+  }
+};
+
+class MB1222 : public MB1242
+{
+public:
+  MB1222(uint8_t address, TwoWire *wire = &Wire)
+    : MB1242(address, wire)
+  {
+  }
+};
+
+class MB1232 : public MB1242
+{
+public:
+  MB1232(uint8_t address, TwoWire *wire = &Wire)
+    : MB1242(address, wire)
+  {
+  }
+};
 
 
 //  -- END OF FILE --
