@@ -121,22 +121,23 @@ uint32_t MB1242::lastRead()
 //
 //  OTHER
 //
-bool MB1242::changeAddress(uint8_t addr)
+bool MB1242::changeAddress(uint8_t address)
 {
-  if ((addr == 0)   || (addr == 80) || (addr == 164) || (addr == 170))
+  if ((address == 0)   || (address == 80) ||
+      (address == 164) || (address == 170))
   {
-    //  error flag?
+    //  TODO error code?
     return false;
   }
   uint8_t arr[4];
   arr[0] = _address << 1;
   arr[1] = 0xAA;  //  170
   arr[2] = 0xA5;  //  165
-  arr[4] = addr << 1;
+  arr[4] = address << 1;
   _write(arr, 4);
+  //  TODO error write?
   //  use new address
-  _address = addr;
-  //  TODO error?
+  _address = address;
   return true;
 }
 

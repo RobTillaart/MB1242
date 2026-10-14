@@ -19,23 +19,29 @@ Arduino library for the MaxBotic I2C MB1242 distance sensor.
 **Experimental - work in progress**
 
 This library is to use the MB1242 and compatible distance sensors.
+These compatibles include MB1202, MB1212, MB1222 and MB1232.
 
-Note: not tested with hardware yet.
+Note: the library is not tested with hardware yet.
 
-Came across this sensor on the Arduino forum and to understand it better I tried to write an Arduino library for it.
-So consider it work in progress.
-If you have hardware, please test and provide feedback so the library
-can mature.
+If you have the hardware, please test and provide feedback if the library
+works or not so the library can mature.
 
-TODO elaborate
 
-Voltage 3.0 - 5.5 V, so should work for ESP32 and AVR.
+_Came across this sensor and found it interesting as
+it supports a range up to 7.5 meters.
+To understand the device better I wrote an Arduino library for it.
+So consider the current version "work in progress"._
 
-Temperature -40° - 65°
 
-Sample rate up to 40 Hz (need status pin).
+TODO: elaborate description.
 
-Device is operational after ~115 ms
+|  property     |       |
+|:--------------|:------|
+|  Range        |  20/25 cm up to 7.5 meters
+|  Voltage      |  3.0 - 5.5 V, so should work for ESP32 and AVR.
+|  Temperature  |  0°C - 65°C == 32°F - 149°F
+|  Sample rate  |  10 Hz up to 40 Hz (need statusPin, see below).
+|  Start time   |  operational after ~115 ms
 
 
 Feedback as always is welcome.
@@ -57,50 +63,53 @@ and any other applications that may cause personal injury due to the product's f
 ### Hardware
 
 ```
-             TOPVIEW MB1242
+            Top view MB12X2
          +--------------------+
    pin 7 | o  GND             |
    pin 6 | o  VCC             |
    pin 5 | o  SCL             |
    pin 4 | o  SDA             |
-   pin 3 | o   x              |
-   pin 2 | o   x              |
-   pin 1 | o   x              |
+   pin 3 | o  not used        |
+   pin 2 | o  status          |
+   pin 1 | o  address select  |
          +--------------------+
 ```
 
-|  Pin  |  description  |
+|  pin  |  description  |
 |:-----:|:--------------|
-|   7   |  Ground 
-|   6   |  VCC
+|   7   |  Ground
+|   6   |  VCC - 3.0-5.5 Volt
 |   5   |  SCL - I2C clock
 |   4   |  SDA - I2C data
 |   3   |  not used
-|   2   |  status + not implemented - address announce
-|   1   |  not implemented - address used
+|   2   |  status + (not in library) address announce
+|   1   |  address select
 
 
 Pin 2 is HIGH during distance measurement, and LOW when IDLE.
+This can be used to detect when a measurement is done.
 During power up pin 2 "sends" a high pulse indicating its 8 bit address.
 100 us per unit, so address 224 gives a pulse of 22.400 micros.
-One can measure this with digitalRead() or pulseIn() only if you can 
+One can measure this with digitalRead() or pulseIn() only if you can
 control the startup. The library does not support this function.
 
-Using the status pin can speed up the detection that the device is ready,
+Using the statusPin can speed up the detection that the device is ready,
 and thus the reading of the device.
 
-If pin 1 is HIGH or unconnected it will use the internal I2C address set
-with changeAddress(). If pulled LOW it will use factory default address.
+If pin 1 is HIGH or unconnected the device will use the internal I2C
+address set with changeAddress().
+If pulled LOW it will use factory default address.
 The library does not support this function.
+Advice is to hardwire this pin with a switch to GND in your project.
 
 
 ### Compatibles
 
 Datasheet (ds) mentions:
 
-|  device  |  min range   |  ds  |   beam   |notes  |
-|:---------|:------------:|:----:|:--------:|:------|
-|  MB1202  |  20 cm / 6"  |  09  |  wide    |  people, high sensitivity
+|  device  |  min range   |  ds  |   beam   |  notes  |
+|:---------|:------------:|:----:|:--------:|:--------|
+|  MB1202  |  20 cm / 6"  |  09  |   wide   |  people, high sensitivity
 |  MB1212  |  20 cm / 6"  |  10  |  medium  |  best balance
 |  MB1222  |  25 cm / 6"  |  11  |  medium  |  best balance
 |  MB1232  |  25 cm / 6"  |  12  |  narrow  |  large targets
@@ -123,7 +132,7 @@ Other
 
 ### Tested
 
-TODO: Test on Arduino UNO and ESP32
+TODO: Test with hardware on Arduino UNO and ESP32.
 
 
 ## I2C
@@ -131,13 +140,13 @@ TODO: Test on Arduino UNO and ESP32
 ### I2C Address
 
 The default address is 0x70 (112).
-The address can be changed with **changeAddress(uint8_t addr)**.
+The address can be changed with **changeAddress(uint8_t address)**.
 Invalid addresses reported in the datasheet are 0, 80, 164, 170.
 ChangeAddress() will return false if these are used.
 
 It is not clear if a restart is needed when the address is changed.
 
-To be tested.
+TODO: To be tested.
 
 
 ### I2C multiplexing
@@ -162,7 +171,7 @@ too if they are behind the multiplexer.
 
 Datasheet states it only works at 20 - 100 kHz.
 
-To be tested.
+TODO: To be tested.
 
 
 ## Interface
@@ -173,8 +182,12 @@ To be tested.
 
 ### Constructor
 
-- **MB1242(uint8_t address, TwoWire \*wire = &Wire)** optional select I2C bus.
-- **bool begin()** resets internal variables and checks if device address is 
+- **MB1202(uint8_t address, TwoWire \*wire = &Wire)** set address, optional select I2C bus.
+- **MB1212(uint8_t address, TwoWire \*wire = &Wire)** set address, optional select I2C bus.
+- **MB1222(uint8_t address, TwoWire \*wire = &Wire)** set address, optional select I2C bus.
+- **MB1232(uint8_t address, TwoWire \*wire = &Wire)** set address, optional select I2C bus.
+- **MB1242(uint8_t address, TwoWire \*wire = &Wire)** set address, optional select I2C bus.
+- **bool begin()** resets internal variables and checks if device address is
 visible on the I2C bus.
 - **bool isConnected()** Checks if device address can be found on I2C bus.
 - **uint8_t getAddress()** Returns the device address, default 0x70 (112).
@@ -182,17 +195,20 @@ visible on the I2C bus.
 
 ### Async Request
 
-- **bool requestDistance()** request a new distance measurement. 
-This might take up to 100 ms.
+- **bool requestDistance()** request a new distance measurement.
+One can poll with ready() when the request is done.
 - **void setStatusPin(uint8_t statusPin)** option to connect pin 2
 to the library so ready() can detect measurement ready much faster.
-It is possible to use an IRQ pin as status pin and set a flag
-in the IRQ. 
-- **bool ready()** returns true, up to 100 ms after a request was made.
-Will return false if no request was made.
-If the statusPin is set, it will read the status pin instead of 
+It is possible to use an IRQ pin as statusPin and set a flag
+in the IRQ.
+- **bool ready()** returns true if either the statusPin indicates ready or
+when 100 milliseconds after a request was made.
+The function will return false if no request was made.
+If the statusPin is set, it will read the statusPin instead of
 waiting hard for 100 millis.
 
+When using the statusPin, sampling can be up to 40 Hz, "blocking" wait
+for 100 ms will limit the sample rate to 10 Hz.
 
 ### Async Read
 
@@ -204,7 +220,7 @@ Returns range in centimeter.
 Note decimal part are 'decimals', 0.5 feet == 6 inch.
 - **uint32_t lastRead()** returns timestamp of last read.
 
-One can use the printHelpers library to print inch and feet nicely.
+The printHelpers library can help to pretty print inch and feet.
 
 
 ### Address
@@ -216,6 +232,9 @@ Invalid addresses 0, 80, 164, 170 are checked and return false.
 ### Debug
 
 - **uint8_t getLastError()** returns last error of low level communication.
+Resets the error flag.
+
+TODO: table error messages + elaborate error handling.
 
 
 ## Future
@@ -227,14 +246,13 @@ Invalid addresses 0, 80, 164, 170 are checked and return false.
 
 #### Should
 
-- implement derived classes (wrappers?)
 - SOS calibration for temperature and humidity.
 - improve error handling
 
 #### Could
 
 - add examples
-  - IRQ for status pin.
+  - IRQ for statusPin.
 - add unit tests (if possible)
 
 #### Wont

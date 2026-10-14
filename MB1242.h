@@ -48,7 +48,7 @@ public:
   uint32_t lastRead();
 
   //       ADDRESS
-  bool     changeAddress(uint8_t addr);
+  bool     changeAddress(uint8_t address);
 
   //       DEBUG
   int      getLastError();
