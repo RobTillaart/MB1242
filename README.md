@@ -18,8 +18,8 @@ Arduino library for the MaxBotic I2C MB1242 distance sensor.
 
 **Experimental - work in progress**
 
-This library is to use the MB1242 and compatible distance sensors.
-These compatibles include MB1202, MB1212, MB1222 and MB1232.
+This library is to use the MaxBotic I2C MB1242 and compatible distance 
+sensors MB1202, MB1212, MB1222 and MB1232.
 
 Note: the library is not tested with hardware yet.
 
@@ -29,7 +29,7 @@ works or not so the library can mature.
 
 _Came across this sensor and found it interesting as
 it supports a range up to 7.5 meters.
-To understand the device better I wrote an Arduino library for it.
+To understand the working of the device I wrote this library for it.
 So consider the current version "work in progress"._
 
 
@@ -38,7 +38,7 @@ TODO: elaborate description.
 |  property     |       |
 |:--------------|:------|
 |  Range        |  20/25 cm up to 7.5 meters
-|  Voltage      |  3.0 - 5.5 V, so should work for ESP32 and AVR.
+|  Voltage      |  3.0 - 5.5 V, should work with ESP32 and AVR.
 |  Temperature  |  0°C - 65°C == 32°F - 149°F
 |  Sample rate  |  10 Hz up to 40 Hz (need statusPin, see below).
 |  Start time   |  operational after ~115 ms
@@ -49,9 +49,12 @@ Feedback as always is welcome.
 
 ### Correction for speed of sound.
 
-The library or sensor does not compensate the speed of sound for temperature.
-Look at the SRF05 library for a function to calculate the speed of sound.
-To be added in the future.
+The library or sensor does not compensate the speed of sound for 
+temperature or humidity.
+Please look at the SRF05 library for a function to calculate the 
+speed of sound for different T and H.
+
+TODO: add function to calculate correction factor.
 
 
 ### Datasheet warning
@@ -88,9 +91,9 @@ and any other applications that may cause personal injury due to the product's f
 
 Pin 2 is HIGH during distance measurement, and LOW when IDLE.
 This can be used to detect when a measurement is done.
-During power up pin 2 "sends" a high pulse indicating its 8 bit address.
+During power up pin 2 "sends" a HIGH pulse indicating its 8 bit address.
 100 us per unit, so address 224 gives a pulse of 22.400 micros.
-One can measure this with digitalRead() or pulseIn() only if you can
+One can measure this with digitalRead() or pulseIn() if you can
 control the startup. The library does not support this function.
 
 Using the statusPin can speed up the detection that the device is ready,
@@ -107,21 +110,21 @@ Advice is to hardwire this pin with a switch to GND in your project.
 
 Datasheet (ds) mentions:
 
-|  device  |  min range   |  ds  |   beam   |  notes  |
-|:---------|:------------:|:----:|:--------:|:--------|
-|  MB1202  |  20 cm / 6"  |  09  |   wide   |  people, high sensitivity
-|  MB1212  |  20 cm / 6"  |  10  |  medium  |  best balance
-|  MB1222  |  25 cm / 6"  |  11  |  medium  |  best balance
-|  MB1232  |  25 cm / 6"  |  12  |  narrow  |  large targets
-|  MB1242  |  25 cm / 6"  |  13  |  narrow  |  very large targets
+|  device  |  min range    |  ds  |   beam   |  notes  |
+|:---------|:-------------:|:----:|:--------:|:--------|
+|  MB1202  |  20 cm /  8"  |  09  |   wide   |  people, high sensitivity
+|  MB1212  |  20 cm /  8"  |  10  |  medium  |  best balance
+|  MB1222  |  25 cm / 10"  |  11  |  medium  |  best balance
+|  MB1232  |  25 cm / 10"  |  12  |  narrow  |  large targets
+|  MB1242  |  25 cm / 10"  |  13  |  narrow  |  very large targets
 
 
 ### Related
 
 Distance sensors
 - https://github.com/RobTillaart/A02YYUW - Serial distance sensor.
-- https://github.com/RobTillaart/MB1242 - this lib.
-- https://github.com/RobTillaart/SRF05 - distance sensor
+- https://github.com/RobTillaart/MB1242 - I2C distance sensor.
+- https://github.com/RobTillaart/SRF05 - distance sensor with SOS calibration.
 - https://github.com/RobTillaart/US500 - US500 + US4000 underwater distance sensor.
 
 Other
@@ -243,6 +246,7 @@ TODO: table error messages + elaborate error handling.
 
 - improve documentation
 - get hardware to test
+- fix TODO's in code and documentation.
 
 #### Should
 
@@ -252,8 +256,9 @@ TODO: table error messages + elaborate error handling.
 #### Could
 
 - add examples
-  - IRQ for statusPin.
+  - sketch to read startup pulse?
 - add unit tests (if possible)
+- elaborate derived classes? needed?
 
 #### Wont
 
