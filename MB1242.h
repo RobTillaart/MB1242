@@ -8,8 +8,6 @@
 //     URL: https://github.com/RobTillaart/MB1242
 //
 
-//  https://github.com/simondlevy/MB1242
-
 
 #include "Arduino.h"
 #include "Wire.h"
